@@ -9,19 +9,20 @@ OBJDIR = ./build
 # Source files
 # You may also want to add the file path to the search list
 #   with `vpath` directive
-C_SRC = 
+C_SRC = $(wildcard ./src/SFR/*.c) $(wildcard ./src/*.c)
 CPP_SRC = 
+vpath %.c ./src/SFR
 
 # Executable file name
-EXE = 
+EXE = SimU8or
 
 # Compilers
-CC = 
-CXX = 
+CC = gcc
+CXX = g++
 
 # Compiler flags
-CFLAGS = 
-CXXFLAGS = 
+CFLAGS = -std=c99 -Wall -Wextra -pedantic -Oz
+CXXFLAGS = -std=c++11 -Wall -Wextra -pedantic -Oz
 
 # Linker flags
 # If you have used C++ code, remember to add `-lstdc++` here.
@@ -75,10 +76,22 @@ UNAME_S := $(shell uname -s)
 
 ifeq ($(UNAME_S), Linux)
 # Linux
+ifdef STATIC
+LDFLAGS += `pkg-config --static --libs sdl2` -lSDL2_ttf
+else
+LDFLAGS += `pkg-config --libs sdl2` -lSDL2_ttf
+endif
 endif
 
 ifeq ($(OS), Windows_NT)
 # MinGW
+# SDL2 & SDL2-ttf needs different flags on my machine,
+#   so I added linker flags here
+ifdef STATIC
+LDFLAGS += `pkg-config --static --libs sdl2 sdl2_ttf` -lstdc++ -mconsole
+else
+LDFLAGS += `pkg-config --libs sdl2 sdl2_ttf` -mconsole
+endif
 endif
 
 
