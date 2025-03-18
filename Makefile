@@ -76,6 +76,9 @@ UNAME_S := $(shell uname -s)
 
 ifeq ($(UNAME_S), Linux)
 # Linux
+OS = Linux
+
+CFLAGS += `pkg-config --cflags sdl2`
 ifdef STATIC
 LDFLAGS += `pkg-config --static --libs sdl2` -lSDL2_ttf
 else
@@ -87,6 +90,7 @@ ifeq ($(OS), Windows_NT)
 # MinGW
 # SDL2 & SDL2-ttf needs different flags on my machine,
 #   so I added linker flags here
+CFLAGS += `pkg-config --cflags sdl2 sdl2_ttf`
 ifdef STATIC
 LDFLAGS += `pkg-config --static --libs sdl2 sdl2_ttf` -lstdc++ -mconsole
 else
